@@ -5,6 +5,8 @@ from django.core.exceptions import ValidationError
 
 from phonenumber_field.modelfields import PhoneNumberField
 
+from event.models import Event
+
 
 def validate_student_id(value):
     try:
@@ -44,3 +46,18 @@ class Client(models.Model):
 
     def __str__(self):
         return self.id
+
+
+class Ticket(models.Model):
+    client = models.ForeignKey(Client, on_delete=models.CASCADE)
+    event = models.OneToOneField(Event, on_delete=models.CASCADE)
+    last_access_at = models.DateTimeField(
+        "마지막 접속 시간", default=now, null=False, blank=False
+    )
+
+    class Meta:
+        verbose_name = "티켓"
+        verbose_name_plural = "티켓들"
+
+    def __str__(self):
+        return f"{self.client.id} {self.event.title}"
