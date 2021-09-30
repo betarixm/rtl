@@ -30,9 +30,7 @@ class RegisterView(View):
             client.full_clean()
 
         except ValidationError as e:
-            return JsonResponse(
-                {"success": False, "errors": e.messages}, status=400
-            )
+            return JsonResponse({"success": False, "errors": e.messages}, status=400)
 
         except Exception as e:
             return JsonResponse({"success": False, "errors": str(e)}, status=400)
@@ -40,3 +38,13 @@ class RegisterView(View):
         client.save()
 
         return JsonResponse({"success": True})
+
+
+class ClientView(View):
+    def get(self, request, client_id):
+        client = Client.objects.filter(id=client_id).first()
+
+        if client is None:
+            return JsonResponse({"success": False})
+        else:
+            return JsonResponse({"success": True})

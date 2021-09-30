@@ -3,6 +3,8 @@ from django.utils.timezone import now
 from django.utils.translation import gettext_lazy as _
 from django.core.exceptions import ValidationError
 
+from datetime import timedelta
+
 from phonenumber_field.modelfields import PhoneNumberField
 
 from event.models import Event
@@ -50,10 +52,16 @@ class Client(models.Model):
 
 class Ticket(models.Model):
     client = models.ForeignKey(Client, on_delete=models.CASCADE)
-    event = models.OneToOneField(Event, on_delete=models.CASCADE)
+    event = models.ForeignKey(Event, on_delete=models.CASCADE)
     last_access_at = models.DateTimeField(
         "마지막 접속 시간", default=now, null=False, blank=False
     )
+
+    @staticmethod
+    def valid_tickets(event_id: str):
+        return Ticket.objects.filter(
+            event_id=event_id, last_access_at__gte=now() - timedelta(seconds=30)
+        )
 
     class Meta:
         verbose_name = "티켓"
