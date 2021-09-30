@@ -72,6 +72,10 @@ class _Event extends React.Component<EventProps, EventState> {
                     clientNumbers: message.numbers
                 })
             }
+
+            if("error" in message) {
+                this.ws.close();
+            }
         }
 
         this.ws.onerror = () => {
