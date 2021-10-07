@@ -101,7 +101,7 @@ class App extends React.Component<AppProps, AppState> {
     render = () => {
         return (
             <div
-                className={"transition-all min-h-screen flex items-center justify-center bg-gray-100 py-12 px-4 sm:px-6 lg:px-8"}>
+                className={"transition-all absolute inset-0 flex items-center justify-center bg-gray-100 py-12 px-4 sm:px-6 lg:px-8"}>
                 {this.content()}
                 <a href={"https://github.com/betarixm"}
                    className={"absolute left-0 bottom-5 w-full text-center text-xs text-gray-400 z-10"}>GitHub @betarixm</a>
