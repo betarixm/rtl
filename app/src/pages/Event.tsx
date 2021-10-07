@@ -61,9 +61,7 @@ class _Event extends React.Component<EventProps, EventState> {
 
         this.ws.onclose = () => {
             clearInterval(intervalId);
-            setTimeout(() => {
-                this.heartbeat();
-            }, 1000);
+            this.heartbeat();
         }
 
         this.ws.onmessage = (e: { data: string; }) => {
@@ -81,9 +79,7 @@ class _Event extends React.Component<EventProps, EventState> {
 
         this.ws.onerror = () => {
             clearInterval(intervalId);
-            setTimeout(() => {
-                this.heartbeat();
-            }, 1000);
+            this.ws.close();
         }
     }
 
