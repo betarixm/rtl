@@ -156,6 +156,8 @@ CHANNEL_LAYERS = {
                     int(os.getenv("CHANNELS_LAYERS_REDIS_PORT", 6379)),
                 )
             ],
+            "capacity": 1500,
+            "expiry": 10,
         },
     },
 }
