@@ -49,6 +49,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -82,11 +83,21 @@ WSGI_APPLICATION = "rtl.wsgi.application"
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 DATABASES = {
-    "default": {
+    "development": {
         "ENGINE": "django.db.backends.sqlite3",
         "NAME": BASE_DIR / "db.sqlite3",
-    }
+    },
+    "production": {
+        "ENGINE": "django.db.backends.postgresql_psycopg2",
+        "NAME": "postgres",
+        "USER": "postgres",
+        "HOST": "db",
+        "PORT": 5432,
+        "PASSWORD": os.getenv("POSTGRES_PASSWORD"),
+    },
 }
+
+DATABASES["default"] = DATABASES["development" if DEBUG else "production"]
 
 
 # Password validation
@@ -126,6 +137,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = "/static/"
+STATIC_ROOT = BASE_DIR / "static"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
@@ -140,8 +152,8 @@ CHANNEL_LAYERS = {
         "CONFIG": {
             "hosts": [
                 (
-                    os.getenv("CHANNEL_LAYERS_REDIS_HOST", "127.0.0.1"),
-                    int(os.getenv("CHANNEL_LAYERS_REDIS_PORT", 6379)),
+                    os.getenv("CHANNELS_LAYERS_REDIS_HOST", "127.0.0.1"),
+                    int(os.getenv("CHANNELS_LAYERS_REDIS_PORT", 6379)),
                 )
             ],
         },
@@ -152,3 +164,9 @@ CHANNEL_LAYERS = {
 CORS_ORIGIN_WHITELIST = os.getenv(
     "CORS_ORIGIN_WHITELIST", "http://localhost:3000,http://127.0.0.1:3000"
 ).split(",")
+
+
+# Simplified static file serving.
+# https://warehouse.python.org/project/whitenoise/
+
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
