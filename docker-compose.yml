@@ -34,7 +34,7 @@ services:
       context: .
       dockerfile: Dockerfile.core
     working_dir: /app
-    command: "gunicorn rtl.wsgi:application -k gevent -b 0.0.0.0:80"
+    command: "gunicorn rtl.wsgi:application -k gevent -b 0.0.0.0:80 --workers=3"
     env_file:
       - .env
 
