@@ -49,6 +49,7 @@ def _get_ticket(_client: Client, _event: Event):
 @database_sync_to_async
 @transaction.atomic
 def _update_ticket(ticket: Ticket):
+    ticket = Ticket.objects.select_for_update().filter(id=ticket.id)
     ticket.last_access_at = now()
     ticket.save()
 
@@ -62,7 +63,7 @@ def _remove_ticket(ticket: Ticket):
 @database_sync_to_async
 @transaction.atomic
 def _get_number_of_ticket(_event_id: str):
-    return len(Ticket.valid_tickets(_event_id))
+    return Ticket.valid_tickets(_event_id).count()
 
 
 class EventConsumer(AsyncWebsocketConsumer):
