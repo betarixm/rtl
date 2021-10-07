@@ -1,8 +1,9 @@
 import React from "react";
-import {Link, Redirect} from "react-router-dom";
 
 import {register} from "../utils/api";
 import {idValidator, nameValidator, phoneValidator} from "../utils/validators";
+import Form from "../components/Form";
+import Field from "../components/Field";
 
 
 interface RegisterProps {
@@ -64,15 +65,18 @@ class Register extends React.Component<RegisterProps, RegisterState> {
         this.setState({isRequesting: true});
 
         register(this.state.id, this.state.name, this.state.phone).then((res) => {
-            this.props.onSuccess(this.state.id);
+            if (res) {
+                this.props.onSuccess(this.state.id);
 
-            this.setState({
-                isRequesting: false,
-                isSuccess: true,
-                isError: false,
-                errors: []
-            });
-
+                this.setState({
+                    isRequesting: false,
+                    isSuccess: true,
+                    isError: false,
+                    errors: []
+                });
+            } else {
+                throw new Error("회원가입에 실패했습니다.");
+            }
         }).catch((err) => {
             this.setState({
                 isRequesting: false,
@@ -83,97 +87,51 @@ class Register extends React.Component<RegisterProps, RegisterState> {
         });
     }
 
+    onEnded = () => {
+        return (
+            <>
+                {
+                    this.state.isError
+                        ? (
+                            <div
+                                className={"animate-up text-center mx-auto rounded-3xl overflow-hidden shadow-lg p-3 px-5 mb-4 bg-gray-500 text-white w-full"}>
+                                {this.state.errors}
+                            </div>
+                        )
+                        : ""
+                }
+
+                {
+                    this.state.isSuccess
+                        ? (
+                            <div
+                                className={"animate-up text-center mx-auto rounded-3xl overflow-hidden shadow-lg p-3 px-5 mb-4 bg-gray-500 text-white w-full"}>
+                                등록에 성공했습니다!
+                            </div>
+                        )
+                        : ""
+                }
+            </>
+        )
+    }
+
+    fields = () => {
+        return (
+            <>
+                <Field id={"student-id"} type={"number"} label={"Student ID"} placeholder={"Student ID"} required={true}
+                       onChange={this.setId} value={this.state.id}/>
+                <Field id={"name"} type={"text"} label={"Name"} placeholder={"Name"} required={true}
+                       onChange={this.setName} value={this.state.name}/>
+                <Field id={"phone"} type={"number"} label={"Phone"} placeholder={"Phone"} required={true}
+                       onChange={this.setPhone} value={this.state.phone}/>
+            </>
+        )
+    }
+
     render = () => {
         return (
-            <div className={"container mx-auto items-center justify-center"}>
-                <h1 className={"mt-6 text-center text-3xl font-extrabold text-gray-900"}>rtl</h1>
-                <h2 className={"mt-2 text-center text-sm text-gray-600"}>Real-Time Lottery</h2>
-
-                <div className={"mx-auto rounded-xl overflow-hidden shadow-lg p-6 m-4 bg-white max-w-md"}>
-                    {
-                        this.state.isError
-                            ? (
-                                <div className={"mx-auto rounded-xl overflow-hidden shadow-sm p-3 px-5 mb-4 bg-red-500 text-white space-y-1 max-w-md"}>
-                                    {this.state.errors}
-                                </div>
-                            )
-                            : ""
-                    }
-
-                    {
-                        this.state.isSuccess
-                            ? (
-                                <div className={"mx-auto rounded-xl overflow-hidden shadow-sm p-3 px-5 mb-4 bg-white space-y-1 max-w-md"}>
-                                    Success
-                                </div>
-                            )
-                            : ""
-                    }
-                    <div className="rounded-md shadow-sm -space-y-px">
-                        <div>
-                            <label htmlFor="student-id" className="sr-only">
-                                Student ID
-                            </label>
-                            <input
-                                id="student-id"
-                                type="number"
-                                required
-                                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                                placeholder="Student ID"
-                                onChange={this.setId}
-                            />
-                        </div>
-                    </div>
-
-                    <div className="rounded-md shadow-sm -space-y-px">
-                        <div>
-                            <label htmlFor="name" className="sr-only">
-                                Name
-                            </label>
-                            <input
-                                id="name"
-                                type="text"
-                                required
-                                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                                placeholder="Name"
-                                onChange={this.setName}
-                            />
-                        </div>
-                    </div>
-
-                    <div className="rounded-md shadow-sm -space-y-px">
-                        <div>
-                            <label htmlFor="phone" className="sr-only">
-                                Phone
-                            </label>
-                            <input
-                                id="phone"
-                                type="number"
-                                required
-                                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                                placeholder="Phone"
-                                onChange={this.setPhone}
-                            />
-                        </div>
-                    </div>
-
-                    <button
-                        disabled={this.state.isRequesting}
-                        onClick={this.onSubmit}
-                        className={"group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white mt-4 bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"}>
-                        {this.state.isRequesting ? "Loading" : "Register"}
-                    </button>
-
-                </div>
-
-                <h2 className={"mt-2 text-center text-sm text-gray-600"}>
-                    이미 등록했나요? ─{" "}
-                    <Link to={"/"} className={"underline"}>
-                        Checkin
-                    </Link>
-                </h2>
-
-            </div>
+            <Form title={"Register"} fields={this.fields()} tipMessage={"이미 등록했나요?"} tipUrl={"/"} tipTitle={"Checkin"}
+                  onEnd={this.onEnded()} onButtonClick={this.onSubmit}/>
         )
     }
 }

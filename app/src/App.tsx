@@ -13,6 +13,7 @@ import {checkClientExist} from "./utils/api";
 
 import './index.css';
 import './App.css';
+import Error from "./pages/Error";
 
 
 interface AppProps {
@@ -42,8 +43,6 @@ class App extends React.Component<AppProps, AppState> {
                     id: id,
                     isRegistered: res
                 });
-            }).catch((err) => {
-
             }).finally(() => {
                 this.setState({isLoading: false})
             });
@@ -89,6 +88,9 @@ class App extends React.Component<AppProps, AppState> {
                             }
                         </Route>
 
+                        <Route path={"*"}>
+                            <Error message={"존재하지 않는 페이지입니다."}/>
+                        </Route>
                     </Switch>
                 </Router>
 
@@ -98,8 +100,11 @@ class App extends React.Component<AppProps, AppState> {
 
     render = () => {
         return (
-            <div className={"min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8"}>
+            <div
+                className={"transition-all min-h-screen flex items-center justify-center bg-gray-100 py-12 px-4 sm:px-6 lg:px-8"}>
                 {this.content()}
+                <a href={"https://github.com/betarixm"}
+                   className={"absolute left-0 bottom-5 w-full text-center text-xs text-gray-400 z-10"}>GitHub @betarixm</a>
             </div>
         )
     }
