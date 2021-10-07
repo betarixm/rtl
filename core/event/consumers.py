@@ -1,16 +1,16 @@
 import json
-import asyncio
 
 from django.utils.timezone import now
 from django.db import transaction
 
 from channels.generic.websocket import AsyncWebsocketConsumer
 from channels.db import database_sync_to_async
+import channels.layers
 
-from datetime import timedelta
+from asgiref.sync import async_to_sync
+from time import sleep
 
 from client.models import Client, Ticket
-
 from .models import Event
 
 
@@ -49,7 +49,7 @@ def _get_ticket(_client: Client, _event: Event):
 @database_sync_to_async
 @transaction.atomic
 def _update_ticket(ticket: Ticket):
-    ticket = Ticket.objects.select_for_update().filter(id=ticket.id)
+    ticket = Ticket.objects.select_for_update().filter(id=ticket.id).first()
     ticket.last_access_at = now()
     ticket.save()
 
@@ -74,6 +74,17 @@ class EventConsumer(AsyncWebsocketConsumer):
         self.last_send_at = {}
         self.event_id = ""
 
+    @staticmethod
+    def produce():
+        while True:
+            for event_id in [e["id"].hex for e in Event.objects.values("id")]:
+                layer = channels.layers.get_channel_layer()
+                async_to_sync(layer.group_send)(
+                    f"event_{event_id}",
+                    {"type": "event_number", "message": event_id},
+                )
+            sleep(1)
+
     async def connect(self):
         event_id = self.scope["url_route"]["kwargs"]["event_id"]
         client_id = self.scope["url_route"]["kwargs"]["client_id"]
@@ -94,10 +105,10 @@ class EventConsumer(AsyncWebsocketConsumer):
             await self.channel_layer.group_add(self.event_group_name, self.channel_name)
             await self.accept()
 
-            await self.channel_layer.group_send(
-                self.event_group_name,
-                {"type": "event_number", "message": event_id},
-            )
+            # await self.channel_layer.group_send(
+            #     self.event_group_name,
+            #     {"type": "event_number", "message": event_id},
+            # )
 
         else:
             await self.disconnect(404)
@@ -115,10 +126,10 @@ class EventConsumer(AsyncWebsocketConsumer):
             if ticket is not None:
                 await _remove_ticket(ticket)
 
-        await self.channel_layer.group_send(
-            self.event_group_name,
-            {"type": "event_number", "message": event_id},
-        )
+        # await self.channel_layer.group_send(
+        #     self.event_group_name,
+        #     {"type": "event_number", "message": event_id},
+        # )
 
         await self.channel_layer.group_discard(self.event_group_name, self.channel_name)
 
