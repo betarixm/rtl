@@ -70,8 +70,8 @@ services:
       context: .
       dockerfile: Dockerfile.app
       args:
-        - REACT_APP_URL_BACKEND=http://localhost:8000
-        - REACT_APP_URL_WS=ws://localhost:8000
+        - REACT_APP_URL_BACKEND=${REACT_APP_URL_BACKEND}
+        - REACT_APP_URL_WS=${REACT_APP_URL_WS}
 
     volumes:
       - ./conf.d/nginx.app.conf:/etc/nginx/nginx.conf:ro
