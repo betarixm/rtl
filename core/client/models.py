@@ -16,9 +16,6 @@ def validate_student_id(value):
     except ValueError:
         raise ValidationError(_("학번을 올바른 형식으로 입력해주세요."))
 
-    if len(value) != 8:
-        raise ValidationError(_("학번을 올바른 형식으로 입력해주세요."))
-
     if Client.objects.filter(id=value).first() is not None:
         raise ValidationError(_("해당 학번은 이미 등록되어 있습니다."))
 
@@ -60,7 +57,7 @@ class Ticket(models.Model):
     @staticmethod
     def valid_tickets(event_id: str):
         return Ticket.objects.filter(
-            event_id=event_id, last_access_at__gte=now() - timedelta(seconds=30)
+            event_id=event_id, last_access_at__gte=now() - timedelta(seconds=3600)
         )
 
     class Meta:
