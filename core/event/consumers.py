@@ -123,7 +123,7 @@ class EventConsumer(AsyncWebsocketConsumer):
         if client is not None and event is not None:
             ticket = await _get_ticket(client, event)
 
-            if ticket is not None:
+            if ticket is not None and event.remove_on_disconnect:
                 await _remove_ticket(ticket)
 
         # await self.channel_layer.group_send(

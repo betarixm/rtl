@@ -6,6 +6,7 @@ import uuid
 class Event(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     title = models.CharField("제목", max_length=100)
+    remove_on_disconnect = models.BooleanField("치밀한 실시간 집계", blank=False, null=False)
 
     class Meta:
         verbose_name = "이벤트"
