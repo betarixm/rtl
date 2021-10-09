@@ -31,3 +31,6 @@ specified in the [docker-compose.yml](docker-compose.yml).
 
 This is `rtl`'s frontend engine. Using [CRACO](https://github.com/gsoft-inc/craco), [React](https://github.com/facebook/react)
 and [Tailwind CSS](https://github.com/tailwindlabs/tailwindcss) are applied to this engine. This is based on typescript.
+
+## Use Cases
+- POSTECH-KAIST Science War Victory Celebration 2021 [Link](https://youtu.be/aRSLmuDJwwk)
