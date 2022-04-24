@@ -21,7 +21,6 @@ def validate_student_id(value):
 
 
 class Client(models.Model):
-
     id = models.CharField(
         "학번",
         max_length=8,
@@ -57,8 +56,8 @@ class Ticket(models.Model):
     @staticmethod
     def valid_tickets(event_id: str):
         return Ticket.objects.filter(
-            event_id=event_id, last_access_at__gte=now() - timedelta(seconds=3600)
-        )
+            event_id=event_id, last_access_at__gte=now() - timedelta(seconds=30)
+        ).values("client__id").distinct()
 
     class Meta:
         verbose_name = "티켓"

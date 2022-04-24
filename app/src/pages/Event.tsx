@@ -56,7 +56,7 @@ class _Event extends React.Component<EventProps, EventState> {
         this.ws = new WebSocket(`${URL_WS}/ws/event/${this.state.eventId}/${this.props.id}/`);
 
         this.ws.onopen = () => {
-            intervalId = setInterval(f, 1000);
+            intervalId = setInterval(f, 1000 * 10);
         }
 
         this.ws.onclose = () => {

@@ -1,1 +1,1 @@
-REGISTER_ENABLED: bool = False
+REGISTER_ENABLED: bool = True
