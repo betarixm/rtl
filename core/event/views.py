@@ -1,23 +1,23 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import get_object_or_404
 from django.views import View
 from django.http import JsonResponse
-from django.utils.timezone import now
-
-from datetime import timedelta
 
 from client.models import Ticket, Client
 from .models import Event
+from .producers import EventProducer
 
 
 class DrawView(View):
     def get(self, request, event_id):
-        get_object_or_404(Event, id=event_id)
+        event = get_object_or_404(Event, id=event_id)
 
         client_id = Ticket.valid_tickets(event_id).order_by("?").first()['client__id']
         client = Client.objects.get(id=client_id)
 
         if client is None:
             return JsonResponse({"success": False, "error": "유효한 참여자 없음"}, status=404)
+
+        EventProducer.send_draw_result(client, event)
 
         return JsonResponse(
             {

@@ -2,10 +2,6 @@ import json
 
 from channels.generic.websocket import AsyncWebsocketConsumer
 from channels.db import database_sync_to_async
-import channels.layers
-
-from asgiref.sync import async_to_sync
-from time import sleep
 
 from client.models import Client, Ticket
 from .models import Event
@@ -36,17 +32,6 @@ class EventConsumer(AsyncWebsocketConsumer):
         super().__init__(args, kwargs)
 
         self.last_send_at = {}
-
-    @staticmethod
-    def produce():
-        while True:
-            for event_id in [e["id"] for e in Event.objects.values("id")]:
-                layer = channels.layers.get_channel_layer()
-                async_to_sync(layer.group_send)(
-                    f"event_{event_id}",
-                    {"type": "event_number", "message": event_id},
-                )
-            sleep(1)
 
     async def connect(self):
         event_id = self.scope["url_route"]["kwargs"]["event_id"]
@@ -100,5 +85,13 @@ class EventConsumer(AsyncWebsocketConsumer):
         event_id = event["message"]
 
         await self.send(
-            text_data=json.dumps({"numbers": await _get_number_of_ticket(event_id)})
+            text_data=json.dumps({"type": "event_number", "numbers": await _get_number_of_ticket(event_id)})
+        )
+
+    async def event_draw_result(self, event):
+        client_name = event["client_name"]
+        client_phone_number = event["client_phone_number"][-4:]
+
+        await self.send(
+            text_data=json.dumps({"type": "event_draw_result", "name": client_name, "phone_number": client_phone_number})
         )
