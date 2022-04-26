@@ -31,9 +31,6 @@ class Client(models.Model):
     )
     name = models.CharField("이름", max_length=1000, null=False, blank=False)
     phone_number = PhoneNumberField("전화번호", null=False, blank=False)
-    last_access_at = models.DateTimeField(
-        "마지막 접속 시간", default=now, null=False, blank=False
-    )
 
     def clean(self):
         validate_student_id(self.id)

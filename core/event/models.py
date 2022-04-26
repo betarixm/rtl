@@ -7,7 +7,6 @@ validate_alphanumeric = RegexValidator(r"^[0-9a-zA-Z]*$", "알파벳과 숫자�
 class Event(models.Model):
     id = models.CharField(primary_key=True, max_length=100, validators=[validate_alphanumeric])
     title = models.CharField("제목", max_length=100)
-    remove_on_disconnect = models.BooleanField("치밀한 실시간 집계", blank=False, null=False)
 
     class Meta:
         verbose_name = "이벤트"
