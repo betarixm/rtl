@@ -76,8 +76,9 @@ services:
       - core-asgi
       - core-wsgi
 
-    ports:
-      - "8000:80"
+    # Tip. Use docker-compose.override.yml to specify ports
+    # ports:
+    #   - "8000:80"
 
   app:
     build:
@@ -90,8 +91,9 @@ services:
     volumes:
       - ./conf.d/nginx.app.conf:/etc/nginx/nginx.conf:ro
 
-    ports:
-      - "3000:80"
+    # Tip. Use docker-compose.override.yml to specify ports
+    # ports:
+    #   - "3000:80"
 
     env_file:
       - .env
