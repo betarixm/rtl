@@ -29,6 +29,20 @@ services:
       - core-channels-layer
       - db
 
+  core-asgi-producer:
+    build:
+      context: .
+      dockerfile: Dockerfile.core
+    working_dir: /app
+    command: "daphne -b 0.0.0.0 -p 80 'rtl.asgi-producer:application'"
+    env_file:
+      - .env
+
+    depends_on:
+      - core-migration
+      - core-channels-layer
+      - db
+
   core-wsgi:
     build:
       context: .
