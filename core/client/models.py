@@ -53,7 +53,7 @@ class Ticket(models.Model):
     @staticmethod
     def valid_tickets(event_id: str):
         return Ticket.objects.filter(
-            event_id=event_id, last_access_at__gte=now() - timedelta(seconds=10)
+            event_id=event_id, last_access_at__gte=now() - timedelta(seconds=5)
         ).values("client__id").distinct()
 
     class Meta:
