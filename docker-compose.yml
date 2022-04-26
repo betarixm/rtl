@@ -20,7 +20,7 @@ services:
       context: .
       dockerfile: Dockerfile.core
     working_dir: /app
-    command: "daphne -b 0.0.0.0 -p 80 'rtl.asgi:application'"
+    command: "daphne -b 0.0.0.0 -p 80 'rtl.asgi-consumer:application'"
     env_file:
       - .env
 
@@ -34,7 +34,7 @@ services:
       context: .
       dockerfile: Dockerfile.core
     working_dir: /app
-    command: "daphne -b 0.0.0.0 -p 80 'rtl.asgi-producer:application'"
+    command: "daphne -b 0.0.0.0 -p 80 'rtl.asgi:application'"
     env_file:
       - .env
 
