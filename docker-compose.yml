@@ -3,6 +3,7 @@ version: "3.8"
 services:
   db:
     image: postgres:latest
+    restart: always
     expose:
       - 5432
     volumes:
@@ -12,6 +13,7 @@ services:
 
   core-channels-layer:
     image: redis:latest
+    restart: always
     expose:
       - "6379"
 
@@ -21,6 +23,7 @@ services:
       dockerfile: Dockerfile.core
     working_dir: /app
     command: "daphne -b 0.0.0.0 -p 80 'rtl.asgi-consumer:application'"
+    restart: always
     env_file:
       - .env
 
@@ -35,6 +38,7 @@ services:
       dockerfile: Dockerfile.core
     working_dir: /app
     command: "daphne -b 0.0.0.0 -p 80 'rtl.asgi:application'"
+    restart: always
     env_file:
       - .env
 
@@ -49,6 +53,7 @@ services:
       dockerfile: Dockerfile.core
     working_dir: /app
     command: "gunicorn rtl.wsgi:application -k gevent -b 0.0.0.0:80 --workers=3"
+    restart: always
     env_file:
       - .env
 
@@ -70,6 +75,7 @@ services:
 
   core-nginx:
     image: nginx:latest
+    restart: always
     volumes:
       - ./conf.d/nginx.core.conf:/etc/nginx/nginx.conf:ro
     depends_on:
@@ -87,7 +93,7 @@ services:
       args:
         - REACT_APP_URL_BACKEND=${REACT_APP_URL_BACKEND}
         - REACT_APP_URL_WS=${REACT_APP_URL_WS}
-
+    restart: always
     volumes:
       - ./conf.d/nginx.app.conf:/etc/nginx/nginx.conf:ro
 
