@@ -105,12 +105,12 @@ class _Event extends React.Component<EventProps, EventState> {
         return (
             <div id="popup-modal" tabIndex={-1}
                  className="fixed top-0 left-0 right-0 z-50 overflow-x-hidden overflow-y-auto md:inset-0 h-full backdrop-blur-md bg-black bg-opacity-25 backdrop-filter backdrop-blur-xs object-bottom">
-                <div className="absolute bottom-0 w-full p-4 m-auto md:top-0">
+                <div className="absolute bottom-0 w-full p-4 m-auto md:top-1/4">
                     <div className="animate-up max-w-md bg-white rounded-3xl shadow-xl dark:bg-gray-700 m-auto">
                         <div className="p-6 text-center">
                             <h1 className={"font-extrabold text-xl"}>🎉</h1>
                             <h1 className={"font-extrabold text-xl mb-1"}>Congratulations!</h1>
-                            <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
+                            <h3 className="mb-5 text-xl font-normal text-gray-500 dark:text-gray-400">
                                 {this.state.drawResult.name} ({this.state.drawResult.phone_number})
                             </h3>
                             <button data-modal-toggle="popup-modal" type="button" onClick={() => {
