@@ -6,7 +6,7 @@
 
 `rtl` is realtime lottery framework for POSTECH. It selects one of the participants counted in realtime
 using [Django Channels](https://github.com/django/channels).
-> `Return-to-Libc intended 😆
+> Return-to-Libc intended 😆
 
 ## TL;DR
 
@@ -34,4 +34,5 @@ and [Tailwind CSS](https://github.com/tailwindlabs/tailwindcss) are applied to t
 
 ## Use Cases
 - POSTECH-KAIST Science War Victory Celebration 2021 [Link](https://youtu.be/aRSLmuDJwwk)
-- Introducing My Research 2021 [Link] (https://youtu.be/qeZNRqZb0A4)
+- Introducing My Research 2021 [Link](https://youtu.be/qeZNRqZb0A4)
+- POSTECH President's League of Legends Championship [Link](https://youtu.be/ReTXnXAjSCY)
